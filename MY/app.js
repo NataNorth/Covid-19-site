@@ -22,13 +22,42 @@ function initMap() {
     center: kyiv,
     zoom: 4
   });
-  
+  var locations = [
+    ['Atb', 48.922214, 24.702420, 14],
+    ['Vopac', 48.913022, 24.71534, 6],
+    ['Zorepad', 48.92294, 24.742699, 3],
+    ['Soniach', 48.934076, 24.731099, 2],
+    ['Trostiaynyzkyi', 48.913302, 24.721438, 1]
+  ];
   var infowindow = new google.maps.InfoWindow();
-  var marker;
-  var markers = [];
+  var marker, i;
   var bounds = new google.maps.LatLngBounds();
-    $.getJSON("test.json", function(data) {
+  
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+      bounds.extend(marker.position);
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          var infoContent = '<div class="infowindow">';
+                infoContent += '<div class="point-name">'+ locations[i][0] +'</div>';
+                infoContent += '<div class="point-intensity">' + "Рівень інфікування: " + risk(locations[i][3]) + '</div>';
+                infoContent += "</div>";
+
+          infowindow.setContent(infoContent);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+    map.fitBounds(bounds);
+
+    $.getJSON("MY/infected_places.json", function(data) {
       $.each(data.Places, function(key, place) {
+        if (place == null) {
+        alert("oh no");
+        }
         var latLng = new google.maps.LatLng(place[0].Lat, place[0].Lng); 
         alert(latlng);
         // Creating a marker and putting it on the map
@@ -75,6 +104,7 @@ function initMap() {
     handleLocationError(false, infoWindow, map.getCenter());
   }
 });
+}
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.setPosition(pos);

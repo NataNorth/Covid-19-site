@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Covid-19 TRACKER</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="maun.css">
 </head>
 <body>
     <header class = "main-header">
@@ -20,10 +20,10 @@
     </header>
     <section class = "inf-map">
     <ul>
-        <h1 class = "header-map">Як це працює?</h1>
-        <li >Переглянь карту і отримай актуальну інформацію щодо найбільш ризикованих місць для відвідування</li>
+        <h1>Як це працює?</h1>
+        <li >ВАРІАНТ № 1. Переглянь карту і отримай актуальну інформацію щодо найбільш ризикованих місць для відвідування.</li>
         <li >
-            Дізнайся свій ризик зараження
+            ВАРІАНТ №2. Дізнайся свій ризик зараження.
         </li>
         <h1>Карта "інфікованих" місць</h1>
         <div id="map"></div>
@@ -32,9 +32,15 @@
     <section>
         <div id = "risk"></div>
         <h1>Ризик зараження</h1>
-        <label for="json_uploads">Виберіть файл з розширенням json</label>
+        <p>
+            Для того щоб запустити аналіз нам необхідно дізнатися дані про ваші пересування за останні 14 днів. Ніхто не матиме доступу до них окрім вас. 
+            Щоб почати, натисніть <a href = "https://takeout.google.com/settings/takeout?pli=1" target="_blank">сюди</a>, виберіть "Історію місцезнаходжень"
+            і скачайте дані в форматі json. Тепер залишилось лише завантажити цей файл нижче.
+        </p>
+        <label for="json_uploads">Виберіть файл з розширенням json <br></label>
         <input type="file" id="files" name="files[]" accept=".json" />
         <output id="list"></output>
+        <br class="end">
     </section>
   <script src="app.js"></script>
   <script async defer
