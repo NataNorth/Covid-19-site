@@ -40,3 +40,5 @@ type InfectedPlaceJSON struct {
 type InfectedPlacesJSON struct {
 	Places []InfectedPlaceJSON
 }
+
+

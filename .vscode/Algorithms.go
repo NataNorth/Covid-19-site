@@ -90,7 +90,9 @@ func filterTypes(types []string) bool {
 }
 
 func treatPoint(timestamp string, lat int64, lng int64, c *maps.Client) {
-
+	if expired(timestamp) {
+		return
+	}
 	ll := normalizeLatLang(lat, lng)
 	r := &maps.NearbySearchRequest{
 		Location: &ll,
