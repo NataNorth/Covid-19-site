@@ -19,7 +19,8 @@ import (
 func getInfectedPlacesHandler(w http.ResponseWriter, r *http.Request) {
 	parentDir := getParentDir()
 	timeline := readInfectedPeople(parentDir + "\\data\\infected.json")
-	infectedPlaces := getInfectedPlaces(timeline)
+	visitedPlaces := getVisitedPlaces(timeline)
+	infectedPlaces := getInfectedPlaces(timeline, &visitedPlaces)
 	file, _ := json.MarshalIndent(infectedPlaces, "", " ")
 
 	_ = ioutil.WriteFile(parentDir+"\\Data\\test.json", file, 0644)

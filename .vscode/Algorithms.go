@@ -58,8 +58,6 @@ func (vp *VisitedPlaces) collectGarbage() {
 	}
 }
 
-var visitedPlaces VisitedPlaces
-
 func getClient() *maps.Client {
 	c, err := maps.NewClient(maps.WithAPIKey("AIzaSyCo2JSgqGWWDTEEUl6gv1Ys2Kj2FyuS630"))
 	if err != nil {
@@ -89,7 +87,7 @@ func filterTypes(types []string) bool {
 	return false
 }
 
-func treatPoint(timestamp string, lat int64, lng int64, c *maps.Client) {
+func treatPoint(timestamp string, lat int64, lng int64, localVisitedPlaces *VisitedPlaces, c *maps.Client) {
 	if expired(timestamp) {
 		return
 	}
@@ -103,39 +101,32 @@ func treatPoint(timestamp string, lat int64, lng int64, c *maps.Client) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	for _, place := range response.Results {
 		if filterTypes(place.Types) {
 			continue
 		}
 		if !place.PermanentlyClosed {
 			log.Print("Adding place: " + place.Name)
-			_, ok := visitedPlaces.placeVisitsTable[place.Name]
+			_, ok := localVisitedPlaces.placeVisitsTable[place.Name]
 			if !ok {
-				visitedPlaces.placeVisitsTable[place.Name] = make(map[string]int)
+				localVisitedPlaces.placeVisitsTable[place.Name] = make(map[string]int)
 			}
-			visitedPlaces.placeVisitsTable[place.Name][timestamp]++
-			visitedPlaces.placeDetailsTable[place.Name] = ll
+			localVisitedPlaces.placeVisitsTable[place.Name][timestamp]++
+			localVisitedPlaces.placeDetailsTable[place.Name] = ll
 		}
 	}
 }
 
-var counter int
-
-func getInfectedPlaces(timeline TimelineJSON) InfectedPlacesJSON {
+func getVisitedPlaces(timeline TimelineJSON) VisitedPlaces {
 	c := getClient()
-	counter = 0
-	if visitedPlaces.placeVisitsTable == nil {
-		visitedPlaces.placeVisitsTable = make(map[string]map[string]int)
-		visitedPlaces.placeDetailsTable = make(map[string]maps.LatLng)
-	}
+	visitedPlaces := VisitedPlaces{make(map[string]map[string]int), make(map[string]maps.LatLng)}
 	for _, place := range timeline.Locations {
-		counter++
-		treatPoint(place.TimestampMs, place.LatitudeE7, place.LongitudeE7, c)
-		if counter%100 == 0 {
-			log.Print(counter)
-		}
+		treatPoint(place.TimestampMs, place.LatitudeE7, place.LongitudeE7, &visitedPlaces, c)
 	}
+	return visitedPlaces
+}
+
+func getInfectedPlaces(timeline TimelineJSON, visitedPlaces *VisitedPlaces) InfectedPlacesJSON {
 	var infectedPlaces InfectedPlacesJSON
 	for placeName := range visitedPlaces.placeVisitsTable {
 		placell := visitedPlaces.placeDetailsTable[placeName]
@@ -156,4 +147,17 @@ func readInfectedPeople(filename string) TimelineJSON {
 		log.Fatal(err2)
 	}
 	return timeline
+}
+
+func getHitsForPerson(movement RetroMovementJSON, visitedPlaces *VisitedPlaces) int {
+	hits := 0
+	for _, timelineObject := range movement.TimelineObjects {
+		if !expired(timelineObject.PlaceVisit.Duration.EndTimestampMs) {
+			_, ok := visitedPlaces.placeDetailsTable[timelineObject.PlaceVisit.Location.Name]
+			if ok {
+				hits++
+			}
+		}
+	}
+	return hits
 }
