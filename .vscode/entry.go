@@ -8,30 +8,27 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strings"
-
-	rice "github.com/GeertJohan/go.rice"
-	"github.com/gorilla/mux"
 )
 
-func getInfectedPlacesHandler(w http.ResponseWriter, r *http.Request) {
+var visitedPlaces VisitedPlaces
+
+func getInfectedPlacesHandler() {
 	parentDir := getParentDir()
 	timeline := readInfectedPeople(parentDir + "\\data\\infected.json")
-	visitedPlaces := getVisitedPlaces(timeline)
+	visitedPlaces = getVisitedPlaces(timeline)
 	infectedPlaces := getInfectedPlaces(timeline, &visitedPlaces)
 	file, _ := json.MarshalIndent(infectedPlaces, "", " ")
 
-	_ = ioutil.WriteFile(parentDir+"\\Data\\test.json", file, 0644)
-	http.ServeFile(w, r, parentDir+"\\Data\\infected_places.json")
+	_ = ioutil.WriteFile(parentDir+"\\Data\\infected_places.json", file, 0644)
+	//http.ServeFile(w, r, parentDir+"\\Data\\infected_places.json")
 }
 
 func uploadTimelineHandler(w http.ResponseWriter, req *http.Request) {
 	req.ParseMultipartForm(32 << 20) // limit your max input length!
 	var buf bytes.Buffer
 	// in your case file would be fileupload
-	file, header, err := req.FormFile("file")
+	file, header, err := req.FormFile("myFile")
 	if err != nil {
 		panic(err)
 	}
@@ -48,8 +45,8 @@ func uploadTimelineHandler(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	contents := buf.String()
-	fmt.Println(contents)
+	hits := getHitsForPerson(retroMovement, &visitedPlaces)
+	fmt.Print("You've been exposed " + string(hits) + " times")
 	// I reset the buffer in case I want to use it again
 	// reduces memory allocations in more intense projects
 	buf.Reset()
@@ -58,19 +55,17 @@ func uploadTimelineHandler(w http.ResponseWriter, req *http.Request) {
 	return
 }
 
-func getParentDir() string {
-	dir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return filepath.Dir(dir)
-}
-
 func main() {
 
-	router := mux.NewRouter()
-	router.PathPrefix("/").Handler(http.FileServer(rice.MustFindBox("website").HTTPBox()))
-	router.HandleFunc("/get", getInfectedPlacesHandler).Methods("GET")
-	router.HandleFunc("/upload", uploadTimelineHandler).Methods("POST")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	// router := mux.NewRouter()
+	// router.PathPrefix("/").Handler(http.FileServer(rice.MustFindBox("website").HTTPBox()))
+	// router.HandleFunc("/get", getInfectedPlacesHandler).Methods("GET")
+	// router.HandleFunc("/upload", uploadTimelineHandler).Methods("POST")
+	// log.Fatal(http.ListenAndServe(":8080", router))
+	getInfectedPlacesHandler()
+	http.HandleFunc("/upload", uploadTimelineHandler)
+
+	http.Handle("/", http.FileServer(http.Dir("website")))
+
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

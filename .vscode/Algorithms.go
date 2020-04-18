@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -88,9 +90,9 @@ func filterTypes(types []string) bool {
 }
 
 func treatPoint(timestamp string, lat int64, lng int64, localVisitedPlaces *VisitedPlaces, c *maps.Client) {
-	if expired(timestamp) {
-		return
-	}
+	// if expired(timestamp) {
+	// 	return
+	// }
 	ll := normalizeLatLang(lat, lng)
 	r := &maps.NearbySearchRequest{
 		Location: &ll,
@@ -160,4 +162,12 @@ func getHitsForPerson(movement RetroMovementJSON, visitedPlaces *VisitedPlaces) 
 		}
 	}
 	return hits
+}
+
+func getParentDir() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return filepath.Dir(dir)
 }
