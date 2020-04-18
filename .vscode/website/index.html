@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Covid-19 TRACKER</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <header class = "main-header">
+        <nav class ="nav main-nav">
+            <p id="date"></p>
+            <ul class = "nav">
+                <li><a href = "index.html">Домашня сторінка</a></li>
+                <li><a href = "about.html">Інфо</a></li>
+                <li><a href = "contacts.html">Про нас</a></li>
+            </ul>
+            <h1 class="name">Тримай коронавірус під контролем</h1>
+        </nav>
+    </header>
+    <section class = "inf-map">
+    <ul>
+        <h1 class = "header-map">Як це працює?</h1>
+        <li >Переглянь карту і отримай актуальну інформацію щодо найбільш ризикованих місць для відвідування</li>
+        <li >
+            <a href="risk">Дізнайся свій ризик зараження</a>
+            <input type="button" onClick="document.getElementById('risk').scrollIntoView();" />
+        </li>
+        <h1>Карта "інфікованих" місць</h1>
+        <div id="map"></div>
+  </ul>
+    </section>
+    <section>
+        <div id = "risk"></div>
+        <h1>Ризик зараження</h1>
+        <form
+        enctype="multipart/form-data"
+        action="http://localhost:8080/upload"
+        method="post"
+        >
+            <input type="file" name="myFile" />
+            <input type="submit" value="upload" />
+        </form>
+    </section>
+  <script src="app.js"></script>
+  <script async defer
+   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCo2JSgqGWWDTEEUl6gv1Ys2Kj2FyuS630&callback=initMap"></script>
+</body>
+</html>
