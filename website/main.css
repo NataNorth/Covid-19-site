@@ -1,26 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500&display=swap');
+
+* {
+  box-sizing: border-box;
+  font-family: Raleway;
+  color: rgb(66, 66, 66);
+}
+
+.main-header{
+  background-color: cornsilk;
+  background-image: url("virus.jpg");
+  background-size: cover;
+  background-blend-mode: multiply;
+  padding-bottom: 150px;
+}
 body {
     font-family: helvetica;
+    color: rgb(255, 251, 245);
+    margin: 0;
+    padding: 0;
   }
   
   ul {
     font-family: monospace;
+    
   }
-  li {
-    list-style: circle;
+  .nav ul {
+    margin: 0;
   }
-  
-  .list {
+  .nav li {
+    display: inline;
+  }
+  .nav a {
+    display: inline-block;
+    padding: .5em;
+    color: white;
+    text-decoration: none;
+  }
+
+  .main-nav {
+    text-align: center;
+    font-size: 1.1e;
+    font-weight: lighter;
+  }
+.main-nav li {
+  padding: 0 5%;
+}
+
+  .nav a:hover{
+    background-color: rgb(255, 255, 255, .3);
+  }
+
+  .name {
+    text-align: center;
+    margin: 0;
+    font-size: 4em;
+    color: rgb(175, 212, 175);
+    padding-top: 100px;
+  }
+  .inf-map {
+    text-align: center;
+  }
+
+  .inf-map li{
     list-style: square;
+    text-align: start;
   }
 
   #date {
+    padding: 0 5%;
+    margin: 1em;
     font-size: 12px;
     font-style: italic;
     font-weight: bold;
+    text-align: end;
+    color: wheat;
   }
-
+  
   #map {
     height: 400px;  /* The height is 400 pixels */
     width: 50%;  /* The width is the width of the web page */
    }
+   /* Add a black background color to the top navigation */
+
    
