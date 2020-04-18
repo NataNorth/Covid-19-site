@@ -1,20 +1,3 @@
 {
- "Places": [
-  {
-   "MapMarker": {
-    "Name": "PrivatBank ATM",
-    "Lat": 49.9894005,
-    "Lng": 36.2312825
-   },
-   "Intensity": 1
-  },
-  {
-   "MapMarker": {
-    "Name": "Nutrition Club SUPER",
-    "Lat": 49.9894005,
-    "Lng": 36.2312825
-   },
-   "Intensity": 1
-  }
- ]
+ "Places": null
 }

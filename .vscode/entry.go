@@ -42,6 +42,11 @@ func uploadTimelineHandler(w http.ResponseWriter, req *http.Request) {
 	// do something with the contents...
 	// I normally have a struct defined and unmarshal into a struct, but this will
 	// work as an example
+	var retroMovement RetroMovementJSON
+	err = json.Unmarshal(buf.Bytes(), &retroMovement)
+	if err != nil {
+		panic(err)
+	}
 	contents := buf.String()
 	fmt.Println(contents)
 	// I reset the buffer in case I want to use it again
@@ -63,8 +68,8 @@ func getParentDir() string {
 func main() {
 
 	router := mux.NewRouter()
-	router.HandleFunc("/", getInfectedPlacesHandler).Methods("GET")
-	router.HandleFunc("/upload", uploadTimelineHandler).Methods("POST")
 	router.PathPrefix("/").Handler(http.FileServer(rice.MustFindBox("website").HTTPBox()))
-	log.Fatal(http.ListenAndServe(":12345", router))
+	router.HandleFunc("/get", getInfectedPlacesHandler).Methods("GET")
+	router.HandleFunc("/upload", uploadTimelineHandler).Methods("POST")
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
