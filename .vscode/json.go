@@ -13,13 +13,13 @@ type ActivityWithConfidenceJSON struct {
 
 // ActivityJSON from Google API
 type ActivityJSON struct {
-	TimestampMs                int64
+	TimestampMs                string
 	ActivityWithConfidenceJSON []ActivityWithConfidenceJSON
 }
 
 // Location from Google API
 type Location struct {
-	Timestamp   int64
+	TimestampMs string
 	LatitudeE7  int64
 	LongitudeE7 int64
 	Accuracy    int
@@ -28,7 +28,6 @@ type Location struct {
 
 type MapMarkerJSON struct {
 	Name string
-	Data string
 	Lat  float64
 	Lng  float64
 }
