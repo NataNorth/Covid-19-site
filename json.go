@@ -1,8 +1,10 @@
+package covid
+
 type TimelineJSON struct {
 	Locations []Location
 }
 
-type ActivityWithConfidenceJSON {
+type ActivityWithConfidenceJSON struct {
 	Type string
 	Confidence  int
 }
