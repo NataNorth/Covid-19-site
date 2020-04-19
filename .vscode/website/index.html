@@ -40,26 +40,16 @@
         <label for="json_uploads">Виберіть файл з розширенням json <br></label>
         <form
         enctype="multipart/form-data"
-        action="http://localhost:8080/upload"
         method="post"
+        id = "uploadForm"
         >
         <input type="file" id="files" name="files[]" accept=".json" />
         <output id="list"></output>
-        <input type="submit" value="upload" />
-        <div id="div1"><p>Результат тут</p></div>
+        <input type="submit" id = "ind" value="upload" />
+        <div id="result"><p> </p></div>
     </form>
-    <button>Get External Content</button>
     </section>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>
-    $(document).ready(function(){
-        $("button").click(function(){
-            $.ajax({url: "Exposed.txt", success: function(result){
-                $("#div1").html(result);
-            }});
-        });
-    });
-    </script>
     </head>
     <body>
     

@@ -134,3 +134,38 @@ function handleFileSelect(evt) {
 }
 
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+var input = document.getElementById('ind')
+input.addEventListener('click', updateValue)
+
+function uploadFile() {
+  let json = document.getElementById("files").files[0];
+  let formData = new FormData();
+
+  formData.append("files", json);
+  fetch('/upload', {method: "POST", body: formData});
+}
+
+function updateValue() {
+  let promise = new Promise(function(resolve, reject) {
+    uploadFile()
+    setTimeout(() => resolve(1), 1000);
+  });
+  promise.then(function(result) {
+    var url = "Exposed.txt";
+    var storedText;
+    uploadFile()
+    fetch(url)
+      .then(function(response) {
+        response.text().then(function(text) {
+          storedText = text;
+          document.getElementById('result').textContent =
+          "Результат \n" + storedText;
+        });
+      });
+  });
+}
+
+$('#uploadForm').submit(function () {
+  return false;
+ });
