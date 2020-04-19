@@ -23,9 +23,9 @@ function initMap() {
     zoom: 4
   });
   var locations = [
-    ['Atb', 48.922214, 24.702420, 14],
+    ['ATB-Market', 48.922799, 24.701803, 14],
     ['Vopac', 48.913022, 24.71534, 6],
-    ['Zorepad', 48.92294, 24.742699, 3],
+    ['Klen', 48.944735, 24.702578, 3],
     ['Soniach', 48.934076, 24.731099, 2],
     ['Trostiaynyzkyi', 48.913302, 24.721438, 1]
   ];
@@ -163,9 +163,30 @@ function updateValue() {
           "Результат \n" + storedText;
         });
       });
+      setMarkers();
   });
 }
 
 $('#uploadForm').submit(function () {
   return false;
  });
+
+ var iconBase = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/';
+ function setMarkers(){
+   var loc = [
+   ['ATB-Market', 48.922799, 24.701803, 6],
+   ['Klen ', 48.944735, 24.702578, 1]
+   ];
+   var marker, i;
+    var bounds = new google.maps.LatLngBounds();
+  
+    for (i = 0; i < loc.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(loc[i][1], loc[i][2]),
+        map: map,
+        icon: iconBase + 'info-i_maps.png'
+      });
+      bounds.extend(marker.position);
+    }
+    map.fitBounds(bounds);
+ }

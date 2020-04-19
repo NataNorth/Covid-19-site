@@ -9,7 +9,7 @@
 
 .main-header{
   background-color: rgb(0, 0, 0, .50);
-  background-image: url("virus.jpg");
+  background-image: url("vir.jpg");
   background-size: cover;
   background-blend-mode: multiply;
   padding-bottom: 150px;
@@ -103,4 +103,8 @@ body {
     padding: 0 20em;
    }
    
+   .result {
+    text-align: center;
+    font-size: 2em;
+  }
    

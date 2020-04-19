@@ -51,7 +51,7 @@ func uploadTimelineHandler(w http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 	hits := getHitsForPerson(retroMovement, &visitedPlaces)
-	//hits := 23
+
 
 	text := []byte("You've been exposed " + strconv.Itoa(hits) + " times")
 	err = ioutil.WriteFile(getParentDir()+"\\.vscode\\website\\Exposed.txt", text, 0644)
@@ -65,11 +65,6 @@ func uploadTimelineHandler(w http.ResponseWriter, req *http.Request) {
 
 func main() {
 
-	// router := mux.NewRouter()
-	// router.PathPrefix("/").Handler(http.FileServer(rice.MustFindBox("website").HTTPBox()))
-	// router.HandleFunc("/get", getInfectedPlacesHandler).Methods("GET")
-	// router.HandleFunc("/upload", uploadTimelineHandler).Methods("POST")
-	// log.Fatal(http.ListenAndServe(":8080", router))
 	getInfectedPlacesHandler()
 	http.HandleFunc("/upload", uploadTimelineHandler)
 	http.HandleFunc("/getplaces", getPlacesHandler)

@@ -154,12 +154,13 @@ func readInfectedPeople(filename string) TimelineJSON {
 func getHitsForPerson(movement RetroMovementJSON, visitedPlaces *VisitedPlaces) int {
 	hits := 0
 	for _, timelineObject := range movement.TimelineObjects {
-		if !expired(timelineObject.PlaceVisit.Duration.EndTimestampMs) {
-			_, ok := visitedPlaces.placeDetailsTable[timelineObject.PlaceVisit.Location.Name]
-			if ok {
-				hits++
-			}
+		//if !expired(timelineObject.PlaceVisit.Duration.EndTimestampMs) {
+		details, ok := visitedPlaces.placeDetailsTable[timelineObject.PlaceVisit.Location.Name]
+		if ok {
+			hits++
+			log.Print("Exposed at: ", timelineObject.PlaceVisit.Location.Name, " : ", details.Lat, ", ", details.Lng)
 		}
+		//}
 	}
 	return hits
 }

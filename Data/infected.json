@@ -1,8 +1,8 @@
 {
     "locations" : [ {
       "timestampMs" : "1518951088074",
-      "latitudeE7" : 499894005,
-      "longitudeE7" : 362312825,
+      "latitudeE7" : 489227990, 
+      "longitudeE7" : 247018030,
       "accuracy" : 17,
       "activity" : [ {
         "timestampMs" : "1518951088123",
@@ -13,8 +13,8 @@
       } ]
     }, {
       "timestampMs" : "1518951106099",
-      "latitudeE7" : 489449328,
-      "longitudeE7" : 247023741,
+      "latitudeE7" : 489447350,
+      "longitudeE7" : 247025780,
       "accuracy" : 19
     }, {
       "timestampMs" : "1518951432956",
