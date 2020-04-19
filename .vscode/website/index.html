@@ -18,13 +18,12 @@
             <h1 class="name">Тримай коронавірус під контролем</h1>
         </nav>
     </header>
-    <section class = "inf-map">
+    <section>
     <ul>
-        <h1 class = "header-map">Як це працює?</h1>
-        <li >Переглянь карту і отримай актуальну інформацію щодо найбільш ризикованих місць для відвідування</li>
+        <h1>Як це працює?</h1>
+        <li >ВАРІАНТ № 1. Переглянь карту і отримай актуальну інформацію щодо найбільш ризикованих місць для відвідування.</li>
         <li >
-            <a href="risk">Дізнайся свій ризик зараження</a>
-            <input type="button" onClick="document.getElementById('risk').scrollIntoView();" />
+            ВАРІАНТ №2. Дізнайся свій ризик зараження.
         </li>
         <h1>Карта "інфікованих" місць</h1>
         <div id="map"></div>
@@ -33,17 +32,41 @@
     <section>
         <div id = "risk"></div>
         <h1>Ризик зараження</h1>
+        <p>
+            Для того щоб запустити аналіз нам необхідно дізнатися дані про ваші пересування за останні 14 днів. Ніхто не матиме доступу до них окрім вас. 
+            Щоб почати, натисніть <a href = "https://takeout.google.com/settings/takeout?pli=1" target="_blank">сюди</a>, виберіть "Історію місцезнаходжень"
+            і скачайте дані в форматі json. Тепер залишилось лише завантажити цей файл нижче.
+        </p>
+        <label for="json_uploads">Виберіть файл з розширенням json <br></label>
         <form
         enctype="multipart/form-data"
         action="http://localhost:8080/upload"
         method="post"
         >
-            <input type="file" name="myFile" />
-            <input type="submit" value="upload" />
-        </form>
+        <input type="file" id="files" name="files[]" accept=".json" />
+        <output id="list"></output>
+        <input type="submit" value="upload" />
+        <div id="div1"><p>Результат тут</p></div>
+    </form>
+    <button>Get External Content</button>
     </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $("button").click(function(){
+            $.ajax({url: "Exposed.txt", success: function(result){
+                $("#div1").html(result);
+            }});
+        });
+    });
+    </script>
+    </head>
+    <body>
+    
   <script src="app.js"></script>
-  <script async defer
-   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCo2JSgqGWWDTEEUl6gv1Ys2Kj2FyuS630&callback=initMap"></script>
+  <script async defer 
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHI2Al_ShVSSPZInlkSJJI8QfqvBEa4Lw&callback=initMap"
+  type="text/javascript"></script>
+
 </body>
 </html>

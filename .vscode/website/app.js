@@ -7,38 +7,83 @@ let selectElement = document.getElementById('date');
 selectElement.innerHTML = formatDate;
 //console.log('Here\'s a hidden message');
 var map;
-var locations = [
-  ['Bondi Beach', -33.890542, 151.274856, 4],
-  ['Coogee Beach', -33.923036, 151.259052, 5],
-  ['Cronulla Beach', -34.028249, 151.157507, 3],
-  ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-  ['Maroubra Beach', -33.950198, 151.259302, 1]
-];
+ function risk(number){
+      if (number < 5) {
+        return "низький";
+      } else if (number > 4 && number < 13) {
+        return "середній";
+      } else if (number > 12) {
+        return "високий";
+      }
+ }
 function initMap() {
     var kyiv = {lat: 50.434341, lng: 30.527756};
     map = new google.maps.Map(document.getElementById('map'), {
     center: kyiv,
     zoom: 4
   });
-  
+  var locations = [
+    ['Atb', 48.922214, 24.702420, 14],
+    ['Vopac', 48.913022, 24.71534, 6],
+    ['Zorepad', 48.92294, 24.742699, 3],
+    ['Soniach', 48.934076, 24.731099, 2],
+    ['Trostiaynyzkyi', 48.913302, 24.721438, 1]
+  ];
   var infowindow = new google.maps.InfoWindow();
-
   var marker, i;
+  var bounds = new google.maps.LatLngBounds();
+  
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+      bounds.extend(marker.position);
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          var infoContent = '<div class="infowindow">';
+                infoContent += '<div class="point-name">'+ locations[i][0] +'</div>';
+                infoContent += '<div class="point-intensity">' + "Рівень інфікування: " + risk(locations[i][3]) + '</div>';
+                infoContent += "</div>";
 
-  for (i = 0; i < locations.length; i++) {  
-    marker = new google.maps.Marker({
-      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-      map: map
+          infowindow.setContent(infoContent);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+    map.fitBounds(bounds);
+
+    $.getJSON("MY/infected_places.json", function(data) {
+      $.each(data.Places, function(key, place) {
+        if (place == null) {
+        alert("oh no");
+        }
+        var latLng = new google.maps.LatLng(place[0].Lat, place[0].Lng); 
+        alert(latlng);
+        // Creating a marker and putting it on the map
+        var marker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            title: place[0].Name
+        });
+      markers.push(marker);
+      bounds.extend(marker.position);
+      google.maps.event.addListener(marker, "click", (function (mm, tt) { //can be changed with 'click' event
+            return function () {                
+                var infoContent = '<div class="infowindow">';
+                infoContent += '<div class="point-name">'+ place[0].Name+'</div>';
+                infoContent += '<div class="point-address">' + risk(place['Intensity']) + '</div>';
+                infoContent += "</div>";
+
+                infowindow.setOptions({
+                    content: infoContent
+                });
+
+                infowindow.open(map, mm);
+            };
+        })(marker, place[0].Name));
     });
-
-    google.maps.event.addListener(marker, 'click', (function(marker, i) {
-      return function() {
-        infowindow.setContent(locations[i][0]);
-        infowindow.open(map, marker);
-      }
-    })(marker, i));
-  }
-
+    map.fitBounds(bounds);
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -58,8 +103,7 @@ function initMap() {
     // Browser doesn't support Geolocation
     handleLocationError(false, infoWindow, map.getCenter());
   }
-
-  
+});
 }
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -84,8 +128,7 @@ function handleFileSelect(evt) {
   for (var i = 0, f; f = files[i]; i++) {
     output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
                 f.size, ' bytes, last modified: ',
-                f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                '</li>');
+                f.lastModifiedDate.toLocaleDateString(), '</li>');
   }
   document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
 }

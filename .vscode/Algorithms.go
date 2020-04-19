@@ -61,7 +61,7 @@ func (vp *VisitedPlaces) collectGarbage() {
 }
 
 func getClient() *maps.Client {
-	c, err := maps.NewClient(maps.WithAPIKey("AIzaSyCo2JSgqGWWDTEEUl6gv1Ys2Kj2FyuS630"))
+	c, err := maps.NewClient(maps.WithAPIKey("AIzaSyAHI2Al_ShVSSPZInlkSJJI8QfqvBEa4Lw"))
 	if err != nil {
 		log.Fatalf("fatal error: %s", err)
 	}

@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -15,20 +16,24 @@ var visitedPlaces VisitedPlaces
 
 func getInfectedPlacesHandler() {
 	parentDir := getParentDir()
-	timeline := readInfectedPeople(parentDir + "\\data\\infected.json")
+	timeline := readInfectedPeople(parentDir + "\\Data\\infected.json")
 	visitedPlaces = getVisitedPlaces(timeline)
 	infectedPlaces := getInfectedPlaces(timeline, &visitedPlaces)
 	file, _ := json.MarshalIndent(infectedPlaces, "", " ")
 
-	_ = ioutil.WriteFile(parentDir+"\\Data\\infected_places.json", file, 0644)
+	_ = ioutil.WriteFile(parentDir+"\\website\\infected_places.json", file, 0644)
 	//http.ServeFile(w, r, parentDir+"\\Data\\infected_places.json")
+}
+
+func getPlacesHandler(w http.ResponseWriter, req *http.Request) {
+	http.ServeFile(w, req, getParentDir()+"\\website\\infected_places.json")
 }
 
 func uploadTimelineHandler(w http.ResponseWriter, req *http.Request) {
 	req.ParseMultipartForm(32 << 20) // limit your max input length!
 	var buf bytes.Buffer
 	// in your case file would be fileupload
-	file, header, err := req.FormFile("myFile")
+	file, header, err := req.FormFile("files[]")
 	if err != nil {
 		panic(err)
 	}
@@ -45,8 +50,11 @@ func uploadTimelineHandler(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	hits := getHitsForPerson(retroMovement, &visitedPlaces)
-	fmt.Print("You've been exposed " + string(hits) + " times")
+	//hits := getHitsForPerson(retroMovement, &visitedPlaces)
+	hits := 23
+
+	text := []byte("You've been exposed " + strconv.Itoa(hits) + " times")
+	err = ioutil.WriteFile(getParentDir()+"\\.vscode\\website\\Exposed.txt", text, 0644)
 	// I reset the buffer in case I want to use it again
 	// reduces memory allocations in more intense projects
 	buf.Reset()
@@ -62,9 +70,9 @@ func main() {
 	// router.HandleFunc("/get", getInfectedPlacesHandler).Methods("GET")
 	// router.HandleFunc("/upload", uploadTimelineHandler).Methods("POST")
 	// log.Fatal(http.ListenAndServe(":8080", router))
-	getInfectedPlacesHandler()
+	//getInfectedPlacesHandler()
 	http.HandleFunc("/upload", uploadTimelineHandler)
-
+	http.HandleFunc("/getplaces", getPlacesHandler)
 	http.Handle("/", http.FileServer(http.Dir("website")))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
